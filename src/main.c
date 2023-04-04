@@ -72,11 +72,26 @@ typedef struct parametros_s {
 /* === Definiciones de variables internas ================================== */
 
 //static board_t board;
-    static SemaphoreHandle_t mutex;
+//    static SemaphoreHandle_t mutex;
 
 /* === Definiciones de variables externas ================================== */
 
 /* === Definiciones de funciones internas ================================== */
+
+void Azul(void * parameters){
+}
+void Rojo(void * parameters){
+}
+void Amarillo(void * parameters){
+}
+void Verde(void * parameters){
+    while (true) {
+        DigitalOutputToggle(board->led_verde);
+        vTaskDelay(pdMS_TO_TICKS(5*150));
+    }
+}
+
+
 
 void Tarea(void * parameters) {
     board_t board = parameters;
@@ -99,11 +114,7 @@ void Tarea(void * parameters) {
             DigitalOutputDeactivate(board->led_amarillo);
         }
 
-        divisor++;
-        if (divisor == 5){
-            divisor =0;
-            DigitalOutputToggle(board->led_verde);
-        }
+        vTaskDelay(pdMS_TO_TICKS(150));
 
     }
 }
