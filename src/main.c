@@ -78,16 +78,33 @@ typedef struct parametros_s {
 
 /* === Definiciones de funciones internas ================================== */
 
-void Blinking(void * parameters) {
-    parametros_t parametros = (parametros_t) parameters;
-
+void Tarea(void * parameters) {
+    board_t board = parameters;
+    int divisor = 0;
+    
     while (true) {
-        xSemaphoreTake(mutex, portMAX_DELAY);
-        DigitalOutputActivate(parametros->led);
-        vTaskDelay(pdMS_TO_TICKS(parametros->periodo));
-        DigitalOutputDeactivate(parametros->led);
-        xSemaphoreGive(mutex);
-        vTaskDelay(pdMS_TO_TICKS(parametros->periodo));
+        if (DigitalInputGetState(board->boton_prueba)){
+            DigitalOutputActivate(board->led_azul);
+        } else {
+            DigitalOutputDeactivate(board->led_azul);
+        }
+
+        if (DigitalInputHasActivated(board->boton_cambiar)){
+            DigitalOutputToggle(board->led_rojo);
+        }
+        if (DigitalInputGetState(board->boton_prender)){
+            DigitalOutputActivate(board->led_amarillo);
+        }
+        if (DigitalInputGetState(board->boton_apagar)){
+            DigitalOutputDeactivate(board->led_amarillo);
+        }
+
+        divisor++;
+        if (divisor == 5){
+            divisor =0;
+            DigitalOutputToggle(board->led_verde);
+        }
+
     }
 }
 
@@ -102,23 +119,11 @@ void Blinking(void * parameters) {
  **          El valor de retorno 0 es para evitar un error en el compilador.
  */
 int main(void) {
-    static board_t board;
-    static struct parametros_s parametros[2];
-   // static SemaphoreHandle_t mutex;
-
     /* Inicializaciones y configuraciones de dispositivos */
-    board = BoardCreate();
-    //board_t board = BoardCreate();
-    parametros[0].led = board->led_rojo;
-    parametros[0].periodo = 500;
-
-    parametros[1].led = board->led_azul;
-    parametros[1].periodo = 500;
-
-    mutex = xSemaphoreCreateMutex();
+    board_t board = BoardCreate();
+    
     /* Creación de las tareas */
-    xTaskCreate(Blinking, "Rojo", configMINIMAL_STACK_SIZE, (void *)&parametros[0], tskIDLE_PRIORITY + 1, NULL);
-    xTaskCreate(Blinking, "Azul", configMINIMAL_STACK_SIZE, (void *)&parametros[1], tskIDLE_PRIORITY + 2, NULL);
+    xTaskCreate(Tarea, "Tarea", configMINIMAL_STACK_SIZE, (void *)board, tskIDLE_PRIORITY + 1, NULL);
 
 /* Arranque del sistema operativo */
     vTaskStartScheduler();
