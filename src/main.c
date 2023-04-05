@@ -101,6 +101,9 @@ void Amarillo(void * parameters){
         if (DigitalInputGetState(board->boton_apagar)){
             DigitalOutputDeactivate(board->led_amarillo);
         }
+        if (DigitalInputGetState(board->boton_apagar)){
+            DigitalOutputDeactivate(board->led_amarillo);
+        }
     }
 }
 
