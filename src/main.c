@@ -59,13 +59,19 @@
 
 /* === Definicion y Macros ================================================= */
 
-#define COUNT_DELAY 1000000
-/* === Declaraciones de tipos de datos internos ============================ */
+#define BOTON_PROBAR_APRETADO (1 << 0)
+#define BOTON_PROBAR_LIBERADO (1 << 4)
 
-typedef struct parametros_s {
-    digital_output_t led;
-    uint16_t periodo;
-} * parametros_t;
+#define BOTON_PRENDER_APRETADO (1 << 1)
+#define BOTON_PRENDER_LIBERADOO (1 << 5)
+
+#define BOTON_APAGAR_APRETADO (1 << 2)
+#define BOTON_APAGAR_LIBERADOO (1 << 6)
+
+#define BOTON_CAMBIAR_APRETADO (1 << 3)
+#define BOTON_CAMBIAR_LIBERADOO (1 << 7)
+
+/* === Declaraciones de tipos de datos internos ============================ */
 
 /* === Declaraciones de funciones internas ================================= */
 
@@ -80,7 +86,7 @@ typedef struct parametros_s {
 
 void Azul(void * parameters){
     board_t board = parameters;
-    
+
     while (true) {
         if (DigitalInputGetState(board->boton_prueba)){
             DigitalOutputActivate(board->led_azul);
