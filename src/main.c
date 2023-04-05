@@ -82,6 +82,10 @@
 
 /* === Definiciones de variables externas ================================== */
 
+EventGroupHandle_t eventos_teclas;
+
+
+
 /* === Definiciones de funciones internas ================================== */
 
 void Azul(void * parameters){
@@ -169,6 +173,9 @@ int main(void) {
     /* Inicializaciones y configuraciones de dispositivos */
     board_t board = BoardCreate();
     
+    eventos_teclas = xEventGroupCreate();
+
+
     /* Creación de las tareas */
     xTaskCreate(Tarea, "Tarea", configMINIMAL_STACK_SIZE, (void *)board, tskIDLE_PRIORITY + 1, NULL);
 
