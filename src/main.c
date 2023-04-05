@@ -79,6 +79,8 @@ typedef struct parametros_s {
 /* === Definiciones de funciones internas ================================== */
 
 void Azul(void * parameters){
+    board_t board = parameters;
+    
     while (true) {
         if (DigitalInputGetState(board->boton_prueba)){
             DigitalOutputActivate(board->led_azul);
@@ -89,6 +91,8 @@ void Azul(void * parameters){
 }
 
 void Rojo(void * parameters){
+    board_t board = parameters;
+
     while (true){
         if (DigitalInputHasActivated(board->boton_cambiar)){
             DigitalOutputToggle(board->led_rojo);
@@ -97,6 +101,8 @@ void Rojo(void * parameters){
 }
 
 void Amarillo(void * parameters){
+    board_t board = parameters;
+
     while (true){
         if (DigitalInputGetState(board->boton_apagar)){
             DigitalOutputDeactivate(board->led_amarillo);
@@ -109,6 +115,8 @@ void Amarillo(void * parameters){
 
 
 void Verde(void * parameters){
+    board_t board = parameters;
+
     while (true) {
         DigitalOutputToggle(board->led_verde);
         vTaskDelay(pdMS_TO_TICKS(5*150));
@@ -117,25 +125,23 @@ void Verde(void * parameters){
 
 
 
-void Tarea(void * parameters) {
+void Teclado(void * parameters) {
     board_t board = parameters;
-    int divisor = 0;
+    //int divisor = 0;
     
     while (true) {
-        if (DigitalInputGetState(board->boton_prueba)){
-            DigitalOutputActivate(board->led_azul);
-        } else {
-            DigitalOutputDeactivate(board->led_azul);
-        }
-
         if (DigitalInputHasActivated(board->boton_cambiar)){
-            DigitalOutputToggle(board->led_rojo);
+            
+        } else if (DigitalInputHasDeactivated(board->boton_cambiar)) {
         }
-        if (DigitalInputGetState(board->boton_prender)){
-            DigitalOutputActivate(board->led_amarillo);
+        if (DigitalInputHasActivated(board->boton_apagar)){
+        } else if (DigitalInputHasDeactivated(board->boton_apagar)) {
         }
-        if (DigitalInputGetState(board->boton_apagar)){
-            DigitalOutputDeactivate(board->led_amarillo);
+        if (DigitalInputHasActivated(board->boton_prender)){
+        } else if (DigitalInputHasDeactivated(board->boton_prender)) {
+        }
+        if (DigitalInputGetState(board->boton_prueba)){
+        } else if (DigitalInputHasDeactivated(board->boton_prueba)) {
         }
 
         vTaskDelay(pdMS_TO_TICKS(150));
