@@ -79,6 +79,13 @@ typedef struct parametros_s {
 /* === Definiciones de funciones internas ================================== */
 
 void Azul(void * parameters){
+    while (true) {
+        if (DigitalInputGetState(board->boton_prueba)){
+            DigitalOutputActivate(board->led_azul);
+        } else {
+            DigitalOutputDeactivate(board->led_azul);
+        }
+    }
 }
 void Rojo(void * parameters){
 }
