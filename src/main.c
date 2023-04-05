@@ -87,10 +87,24 @@ void Azul(void * parameters){
         }
     }
 }
+
 void Rojo(void * parameters){
+    while (true){
+        if (DigitalInputHasActivated(board->boton_cambiar)){
+            DigitalOutputToggle(board->led_rojo);
+        }
+    }
 }
+
 void Amarillo(void * parameters){
+    while (true){
+        if (DigitalInputGetState(board->boton_apagar)){
+            DigitalOutputDeactivate(board->led_amarillo);
+        }
+    }
 }
+
+
 void Verde(void * parameters){
     while (true) {
         DigitalOutputToggle(board->led_verde);
