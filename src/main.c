@@ -133,7 +133,7 @@ void Verde(void * parameters){
     }
 }
 
-
+//38
 
 void Teclado(void * parameters) {
     board_t board = parameters;
@@ -141,17 +141,24 @@ void Teclado(void * parameters) {
     
     while (true) {
         if (DigitalInputHasActivated(board->boton_cambiar)){
-            
+            xEventGroupSetBits(eventos_teclas, BOTON_CAMBIAR_APRETADO);
         } else if (DigitalInputHasDeactivated(board->boton_cambiar)) {
+            xEventGroupSetBits(eventos_teclas, BOTON_CAMBIAR_LIBERADOO);
         }
         if (DigitalInputHasActivated(board->boton_apagar)){
+            xEventGroupSetBits(eventos_teclas, BOTON_APAGAR_APRETADO);
         } else if (DigitalInputHasDeactivated(board->boton_apagar)) {
+            xEventGroupSetBits(eventos_teclas, BOTON_APAGAR_LIBERADOO);
         }
         if (DigitalInputHasActivated(board->boton_prender)){
+            xEventGroupSetBits(eventos_teclas, BOTON_PRENDER_APRETADO);
         } else if (DigitalInputHasDeactivated(board->boton_prender)) {
+            xEventGroupSetBits(eventos_teclas, BOTON_PRENDER_APRETADO);
         }
         if (DigitalInputGetState(board->boton_prueba)){
+            xEventGroupSetBits(eventos_teclas, BOTON_PROBAR_APRETADO);
         } else if (DigitalInputHasDeactivated(board->boton_prueba)) {
+            xEventGroupSetBits(eventos_teclas, BOTON_PROBAR_APRETADO);
         }
 
         vTaskDelay(pdMS_TO_TICKS(150));
