@@ -118,10 +118,13 @@ void Amarillo(void * parameters){
     board_t board = parameters;
 
     while (true){
-        if (DigitalInputGetState(board->boton_apagar)){
+ if (xEventGroupWaitBits(eventos_teclas, BOTON_PRENDER_APRETADO, pdTRUE, pdFALSE, portMAX_DELAY)){
+
+//        if (DigitalInputGetState(board->boton_apagar)){
             DigitalOutputDeactivate(board->led_amarillo);
         }
-        if (DigitalInputGetState(board->boton_apagar)){
+ if (xEventGroupWaitBits(eventos_teclas, BOTON_APAGAR_APRETADO, pdTRUE, pdFALSE, portMAX_DELAY)){
+  //      if (DigitalInputGetState(board->boton_apagar)){
             DigitalOutputDeactivate(board->led_amarillo);
         }
     }
