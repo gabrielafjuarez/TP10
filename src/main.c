@@ -85,19 +85,19 @@
 
 EventGroupHandle_t eventos_teclas;
 
-
-
 /* === Definiciones de funciones internas ================================== */
 
 void Azul(void * parameters){
     board_t board = parameters;
+    EventBits_t eventos;
 
     while (true) {
-        // if (DigitalInputGetState(board->boton_prueba)){
-        //     DigitalOutputActivate(board->led_azul);
-        // } else {
-        //     DigitalOutputDeactivate(board->led_azul);
-        // }
+        eventos = xEventGroupWaitBits(eventos_teclas, BOTON_PROBAR_APRETADO|BOTON_PROBAR_LIBERADO, pdTRUE, pdFALSE, portMAX_DELAY);
+        if (eventos & BOTON_PROBAR_APRETADO){
+            DigitalOutputActivate(board->led_azul);
+        } else if (eventos & BOTON_PROBAR_LIBERADO){
+            DigitalOutputDeactivate(board->led_azul);
+        }
     }
 }
 
@@ -108,9 +108,6 @@ void Rojo(void * parameters){
         if (xEventGroupWaitBits(eventos_teclas, BOTON_CAMBIAR_APRETADO, pdTRUE, pdFALSE, portMAX_DELAY)){
             DigitalOutputToggle(board->led_rojo);
         }
-        // if (DigitalInputHasActivated(board->boton_cambiar)){
-        //     DigitalOutputToggle(board->led_rojo);
-        //}
     }
 }
 
@@ -118,13 +115,10 @@ void Amarillo(void * parameters){
     board_t board = parameters;
 
     while (true){
- if (xEventGroupWaitBits(eventos_teclas, BOTON_PRENDER_APRETADO, pdTRUE, pdFALSE, portMAX_DELAY)){
-
-//        if (DigitalInputGetState(board->boton_apagar)){
-            DigitalOutputDeactivate(board->led_amarillo);
+        if (xEventGroupWaitBits(eventos_teclas, BOTON_PRENDER_APRETADO, pdTRUE, pdFALSE, portMAX_DELAY)){
+            DigitalOutputActivate(board->led_amarillo);
         }
- if (xEventGroupWaitBits(eventos_teclas, BOTON_APAGAR_APRETADO, pdTRUE, pdFALSE, portMAX_DELAY)){
-  //      if (DigitalInputGetState(board->boton_apagar)){
+         if (xEventGroupWaitBits(eventos_teclas, BOTON_APAGAR_APRETADO, pdTRUE, pdFALSE, portMAX_DELAY)){
             DigitalOutputDeactivate(board->led_amarillo);
         }
     }
@@ -140,7 +134,6 @@ void Verde(void * parameters){
     }
 }
 
-//38
 
 void Teclado(void * parameters) {
     board_t board = parameters;
@@ -191,8 +184,12 @@ int main(void) {
 
 
     /* Creación de las tareas */
-    xTaskCreate(Tarea, "Tarea", configMINIMAL_STACK_SIZE, (void *)board, tskIDLE_PRIORITY + 1, NULL);
-
+    xTaskCreate(Teclado, "Teclado", configMINIMAL_STACK_SIZE, (void *)board, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(Azul, "Azul", configMINIMAL_STACK_SIZE, (void *)board, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(Rojo, "Rojo", configMINIMAL_STACK_SIZE, (void *)board, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(Verde, "Verde", configMINIMAL_STACK_SIZE, (void *)board, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(Amarillo, "Amarillo", configMINIMAL_STACK_SIZE, (void *)board, tskIDLE_PRIORITY + 1, NULL);
+    
 /* Arranque del sistema operativo */
     vTaskStartScheduler();
 
