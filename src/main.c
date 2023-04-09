@@ -56,6 +56,7 @@
 #include "task.h"
 #include <stdbool.h>
 #include "semphr.h"
+#include "event_groups.h"
 
 /* === Definicion y Macros ================================================= */
 
@@ -92,11 +93,11 @@ void Azul(void * parameters){
     board_t board = parameters;
 
     while (true) {
-        if (DigitalInputGetState(board->boton_prueba)){
-            DigitalOutputActivate(board->led_azul);
-        } else {
-            DigitalOutputDeactivate(board->led_azul);
-        }
+        // if (DigitalInputGetState(board->boton_prueba)){
+        //     DigitalOutputActivate(board->led_azul);
+        // } else {
+        //     DigitalOutputDeactivate(board->led_azul);
+        // }
     }
 }
 
@@ -104,9 +105,12 @@ void Rojo(void * parameters){
     board_t board = parameters;
 
     while (true){
-        if (DigitalInputHasActivated(board->boton_cambiar)){
+        if (xEventGroupWaitBits(eventos_teclas, BOTON_CAMBIAR_APRETADO, pdTRUE, pdFALSE, portMAX_DELAY)){
             DigitalOutputToggle(board->led_rojo);
         }
+        // if (DigitalInputHasActivated(board->boton_cambiar)){
+        //     DigitalOutputToggle(board->led_rojo);
+        //}
     }
 }
 
